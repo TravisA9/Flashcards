@@ -12,3 +12,6 @@ I will make things work as I get the audios I need. I am making this for my own 
 
 
 To toggle functionality you need to go to the blue 'Mode' menu item and select the option you need.
+
+
+## Do you need to [count some words](https://travisa9.github.io/Flashcards/count.html)?
