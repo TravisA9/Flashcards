@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Counter</title>	
+	<meta charset="utf-8">
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		.box{ border: medium solid steelblue;
+		margin:10px; padding:10px; border-radius: 5px; }
+	</style>
+</head>
+<body style="background: #333;">
+	<div id="results" class="box" style="background:white;" contenteditable="true"></div>
+	<button onclick="count()">Count words </button>
+	<div id="input" class="box" style="background: lightgrey;" contenteditable="true">
+		Paste some text into this box and click the button above to count all words appearing more than twice. 
+	</div>
+
+</body>
+<script type="text/javascript">
+//////////////////////////////////////////////////////////////////////////////////////
+$ = (sel) => document.getElementById(sel);
+	var string = '', words = [], items = []
+//////////////////////////////////////////////////////////////////////////////////////
+function count(){
+	string = $("input").innerHTML;
+	string = string.toLowerCase();
+	string = string.replace(/((?:’s)*[\d,.;:\[\]!“”—?\n\t\r\(\)*]+)/g, ' ')
+	var splitted = string.split(/\s+/);
+	words = []; 
+
+	for(var i=0; i<splitted.length; i++){
+	    words[splitted[i]] = ( typeof words[splitted[i]] != 'undefined' ) ? words[splitted[i]]+=1 : 1
+	}
+
+	var words_counter = 0
+	items = Object.keys(words).map(function(key) { if(words[key]>2) return [key, words[key]]; });
+	items.sort( (a, b) =>  b[1] - a[1] );
+
+	var num = 0, str = ''
+	for (var i = 0; i < items.length; i++){
+		if(items[i]!== undefined){
+			if(num!=items[i][1]){ str += "<br /><b>:------ "+ items[i][1] +" ------:</b><br />";
+				num = items[i][1];
+			}
+			else str += ", ";
+			str += items[i][0];
+		}
+	}
+	$("results").innerHTML = str;
+}
+//////////////////////////////////////////////////////////////////////////////////////
+
+//  var products = [{Category:'vegetable', price: 1}, {Category:'fruits', price: 2}];
+
+// var categories = products.reduce(
+// 	function(sum, product) {
+// 		if(sum.indexOf(product.Category) === -1){ 
+// 			sum.push(product.Category);
+// 		}
+// 		 return sum;
+// 	}, 
+// []);
+</script>
+</html>
