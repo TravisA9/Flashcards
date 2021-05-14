@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flashworth</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+
+<body>
+
+
+
+<div class="topnav" id="myTopnav">
+  <a href="#home" class="active">Home</a>
+<!--   <a href="#news">News</a>
+  <a href="#contact">Contact</a> -->
+    <div class="dropdown">
+    <button class="dropbtn" style="background:#046ac4;">Mode
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content" id="choose">
+      <a href="javascript:void(0);" onclick="choose(event, 'listening')">Listening meter</a>
+      <a href="javascript:void(0);" onclick="choose(event, 'flashcards')">Flashcards</a>
+      <a href="javascript:void(0);" onclick="choose(event, 'sentences')">Sentences</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">ABC/123s
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="javascript:void(0);" onclick="select(event, 'g1')" style="background:#5fadf2;">Group 1</a>
+      <a href="javascript:void(0);" onclick="select(event, 'g2')">Group 2</a>
+      <a href="javascript:void(0);" onclick="select(event, 'g3')">Group 3</a>
+      <a href="javascript:void(0);" onclick="select(event, 'g4')">Group 4</a>
+      <a href="javascript:void(0);" onclick="select(event, 'g5')">Group 5</a>
+      <a href="javascript:void(0);" onclick="select(event, 'g6')">Group 6</a>
+      <a href="javascript:void(0);" onclick="select(event, 'numbers')">Numbers</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">Nouns 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="javascript:void(0);" onclick="select(event, 'Things1')">Things 1</a>
+      <a href="javascript:void(0);" onclick="select(event, 'Things2')">Things 2</a>
+      <a href="javascript:void(0);" onclick="select(event, 'Things3')">Things 3</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">Verbs 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+
+      <a href="javascript:void(0);" onclick="select(event, 'Actions1')">Actions 1</a>
+      <a href="javascript:void(0);" onclick="select(event, 'Actions2')">Actions 2</a>
+      <a href="javascript:void(0);" onclick="select(event, 'Actions3')">Actions 3</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">People 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="javascript:void(0);" onclick="select(event, 'People1')">Persons</a>
+      <a href="javascript:void(0);" onclick="select(event, 'Animals')">Animals</a>
+    </div>
+  </div> 
+
+
+  <!-- <a href="#about">About</a> -->
+  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+</div>
+
+
+
+
+<div id="container">
+	<div id="card" onclick="flip()"></div>
+</div>
+
+
+
+</body>
+
+<script src="js/data.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+//////////////////////////////////////////////////////////////////////////////////////
+$ = (sel) => document.getElementById(sel);
+$$ = (sel) => document.getElementsByClassName(sel);
+chooseOne = (a) => a[ Math.floor(Math.random()*a.length) ]
+//////////////////////////////////////////////////////////////////////////////////////
+var playMode = 'flashcards'
+function choose(event, mode){
+	var kids  = $('choose').children
+
+	for (var i = 0; i < kids.length; i++){
+		kids[i].style.backgroundColor = "white"; }
+
+	event.target.style.backgroundColor = "#5fadf2"
+	playMode = mode
+	$("container").innerHTML = ''
+
+    if(mode == 'listening'){ console.log('listening');
+		$("container").innerHTML = `<textarea id='list' onkeyup="test(event)" placeholder="Type a list of words or phrases you want to count. Ex: Pencil, House, Meeting" style='width:100%; min-height:250px;'></textarea><br><button onclick="buildList()" >Finished</button>`;
+    }else if(mode == 'flashcards'){ 
+    	$("container").innerHTML = `<div id="card" onclick="flip()"></div>`;
+		loadSounds()
+		newCard()
+    }else if(mode == 'sentences'){
+
+    } 
+
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function test(event){
+    var thocrat = 'Jehovah, Jesus, Father, Brother, Sister, Family,     Question, Bible,     God, Human, Angel, Satan,     Good, Bad,     Heaven, Earth'
+    var text = event.target.value
+    event.target.value = text.replace(/\btheocrat\b/g, thocrat)
+}
+//////////////////////////////////////////////////////////////////////////////////////
+var list = new Map();
+function buildList(){ list.clear();
+  var names =  $("list").value.split(/,\s*/)
+	var str = ''
+	for(var i = 0; i < names.length; i++){
+		str += `<div id="${names[i]}" class='ticker' style='color:black;' onclick="count('${names[i]}')">${names[i]} 0</div>`
+		list.set(names[i], 0);
+	}
+	console.log(str)
+	$("container").innerHTML = str
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function count(name){
+	var val = list.get(name)+1
+	$(name).innerHTML = `${name} ${val}`
+	list.set(name, val)
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function select(event, text){ 
+	let result = items.find( ({ name }) => name === text );
+	result.selected = !result.selected
+	event.target.style.backgroundColor = result.selected ? "#5fadf2" : "white" 
+
+	createLesson()
+	return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function createLesson(){ cards = []
+	for (var i = 0; i < items.length; i++) {
+		if(items[i].selected){
+			cards=cards.concat(items[i].item); }
+	}
+	loadSounds()	
+	newCard()
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function loadSounds(){
+	playlist = {}
+	for (var i = 0; i < cards.length; i++){
+		addAudio(cards[i].sound, 'M4A')
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////
+window.onload = function() {
+	loadSounds()
+	newCard()
+};
+//////////////////////////////////////////////////////////////////////////////////////
+var card = chooseOne(cards)
+var flipped = false;
+function newCard(){
+	flip()
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function flip(){
+	if(!flipped){ card = chooseOne(cards)
+		$("card").innerHTML = `<span style="font-size: 5em;">${card.Q}</span>`;
+	}else{	play(card.sound)
+		$("card").innerHTML = `<span style="font-size: 3em;">${card.Q} 
+		<div class="but" style="font-size:25px; padding:4px; top:4px; position:relative;" onclick="event.stopPropagation(); play('${card.sound}')">⏵︎</div>
+		</span><br>${card.A}<br>`;
+		// <div class="but" onclick="newCard()">Next</div>
+	}
+	flipped = !flipped
+}
+
+// play("tic")
+// addAudio("tic", "ogg");
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+sound = function (src) {} 
+var playlist = {}
+//////////////////////////////////////////////////////////////////////////////////////
+addAudio = function (name, ext){
+	if(name==='') return;
+	var sound = document.createElement("audio");
+	sound.src = 'sounds/' + encodeURIComponent(name) + "." + ext;
+	sound.id = name;
+	sound.setAttribute("preload", "true");
+	sound.setAttribute("controls", "none");
+	sound.style.display = "none";
+	document.body.appendChild(sound);
+	playlist[name] = sound
+}
+//////////////////////////////////////////////////////////////////////////////////////
+function play(name){ 
+	console.log(name)
+	if(name === ''){ name = "bloop"; }
+	playlist[name].play(); 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+
+</html>
